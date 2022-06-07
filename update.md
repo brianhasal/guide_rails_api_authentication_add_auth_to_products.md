@@ -202,11 +202,21 @@ Content-Type: application/json
 }
 ```
 
+Use a before_action :authenticate_admin to prohibit non-admin users from creating, updating, and deleting products. (You’ll need to create the authenticate_admin method in the application_controller)
 THE FIRST LINE OF YOUR PHOTOS CONTROLLER SHOULD BE
 ```
     before_action :authenticate_admin, except: [:index, :show]
 ```
-SO YOU REQUIRE AUTHORIZATION FOR CREATE, UPDATE, AND DESTROY
+THE AUTHENTICATE_ADMIN
+```
+  def authenticate_admin
+    unless current_user && current_user.admin
+      render json: {}, status: :unauthorized
+    end
+  end
+```
+
+
 
 Any web request that includes a valid JWT in the headers in this fashion has access to the `current_user` variable in both the controller and the view.
 
